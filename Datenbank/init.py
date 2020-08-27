@@ -39,7 +39,8 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS HOMEPAGE CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE HOMEPAGE
-      (URL CHAR(100) PRIMARY KEY    NOT NULL,
+      (ID SERIAL PRIMARY KEY  NOT NULL,
+      URL CHAR(100)              ,
       TITEL     CHAR(50)            NOT NULL,
       NOTIZ     TEXT );
       ''')
@@ -107,11 +108,11 @@ cur.execute('''DROP TABLE IF EXISTS Author_hat_Homepage CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE Author_hat_Homepage
       (AuthorKey CHAR(50)     NOT NULL,
-      HomepageUrl CHAR(100)     NOT NULL,
+      HomepageId INT     NOT NULL,
       PRIMARY KEY(AuthorKey,HomepageUrl),
       FOREIGN KEY(AuthorKey) REFERENCES AUTHOR(Key)
       ON DELETE CASCADE ON UPDATE CASCADE,
-      FOREIGN KEY(HomepageUrl) REFERENCES HOMEPAGE(Url)
+      FOREIGN KEY(HomepageId) REFERENCES HOMEPAGE(Id)
       ON DELETE CASCADE ON UPDATE CASCADE);
       ''')
 print("Table created successfully")
