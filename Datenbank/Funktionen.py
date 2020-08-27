@@ -9,7 +9,7 @@ def insertAuthor():
 def insertBearbeiter():
     print("Saved")
 
-def insertHomepage():
+def insertHomepage(title, author):
     print("Saved")
 
 def insertBuch():
