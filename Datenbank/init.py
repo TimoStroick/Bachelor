@@ -10,8 +10,7 @@ cur.execute('''DROP TABLE IF EXISTS AUTHOR CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE AUTHOR
       (KEY CHAR(50) PRIMARY KEY     NOT NULL,
-      VORNAME       CHAR(50)        NOT NULL,
-      NACHNAME      CHAR(50)        NOT NULL);
+      NAME       CHAR(100)        NOT NULL);
       ''')
 print("Table created successfully")
 con.commit()

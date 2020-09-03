@@ -16,7 +16,6 @@ def readTag(tag):
             print(tmp)
         i = i+1
 
-    print(ret)
     return ret
 
 def readAttribute(end):
@@ -80,7 +79,7 @@ def startparser(dateipfad):
             break
         else:
             print(list)
-            print("elsepath")
+            #print("elsepath")
 
         line = line.strip()
         if len(line) == 0:
@@ -92,9 +91,13 @@ def parseArticle(taglist):
     global line
     author = []
     ee = []
+    cite = []
     title = ""
     year = 0
     journal = ""
+    volume = ""
+    number = ""
+    pages = ""
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -108,20 +111,36 @@ def parseArticle(taglist):
             author.append(attr[1])
         elif 0 <= attr[0].find("ee"):
             ee.append(attr[1])
+        elif 0 <= attr[0].find("cite"):
+            cite.append(attr[1])
         elif 0 <= attr[0].find("title"):
             title = attr[1]
         elif 0 <= attr[0].find("year"):
             year = attr[1]
+        elif 0 <= attr[0].find("volume"):
+            volume = attr[1]
+        elif 0 <= attr[0].find("number"):
+            number = attr[1]
+        elif 0 <= attr[0].find("pages"):
+            pages = attr[1]
         elif 0 <= attr[0].find("journal"):
             journal = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
-    fkt.insertPublikation(title, year, author, ee, journal)
+    fkt.insertPublikation(title, year, author, ee, journal, volume, number, pages, cite)
     print("<---parseArticle")
 
 def parseInproceedings(taglist):
     global f
     global line
+    author = []
+    ee = []
+    title = ""
+    pages = ""
+    year = 0
+    booktitle = ""
+    url = ""
+    crossref = ""
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -131,14 +150,44 @@ def parseInproceedings(taglist):
         if 0 <= attr[0].find("/inproceedings"):
             line = line[line.find(">"):]
             a = 0
+        elif 0 <= attr[0].find("author"):
+            author.append(attr[1])
+        elif 0 <= attr[0].find("ee"):
+            ee.append(attr[1])
+        elif 0 <= attr[0].find("title"):
+            title = attr[1]
+        elif 0 <= attr[0].find("pages"):
+            pages = attr[1]
+        elif 0 <= attr[0].find("volume"):
+            volume = attr[1]
+        elif 0 <= attr[0].find("year"):
+            year = attr[1]
+        elif 0 <= attr[0].find("url"):
+            url = attr[1]
+        elif 0 <= attr[0].find("crossref"):
+            crossref = attr[1]
+        elif 0 <= attr[0].find("booktitle"):
+            booktitle = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
+
+    fkt.saveInproceedings(author, ee, title, pages, volume, year, url, crossref, booktitle)
 
     print("<---parseInproceedings")
 
 def parseProceeding(taglist):
     global f
     global line
+    editor = []
+    ee = []
+    title = ""
+    booktitle = ""
+    series = ""
+    volume = ""
+    year = 0
+    url = ""
+    isbn = ""
+    publisher = ""
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -148,14 +197,42 @@ def parseProceeding(taglist):
         if 0 <= attr[0].find("/proceeding"):
             line = line[line.find(">"):]
             a = 0
+        elif 0 <= attr[0].find("editor"):
+            editor.append(attr[1])
+        elif 0 <= attr[0].find("ee"):
+            ee.append(attr[1])
+        elif 0 <= attr[0].find("title"):
+            title = attr[1]
+        elif 0 <= attr[0].find("series"):
+            series = attr[1]
+        elif 0 <= attr[0].find("volume"):
+            volume = attr[1]
+        elif 0 <= attr[0].find("year"):
+            year = attr[1]
+        elif 0 <= attr[0].find("url"):
+            url = attr[1]
+        elif 0 <= attr[0].find("booktitle"):
+            booktitle = attr[1]
+        elif 0 <= attr[0].find("isbn"):
+            isbn = attr[1]
+        elif 0 <= attr[0].find("publisher"):
+            publisher = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
+    fkt.saveProceedings(editor, ee, title, series, volume, year, url, booktitle, isbn, publisher)
 
     print("<---parseProceeding")
 
 def parseBook(taglist):
     global f
     global line
+    author = ""
+    ee = ""
+    title = ""
+    year = 0
+    isbn = ""
+    publisher = ""
+    series = ""
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -165,14 +242,36 @@ def parseBook(taglist):
         if 0 <= attr[0].find("/book"):
             line = line[line.find(">"):]
             a = 0
+        elif 0 <= attr[0].find("author"):
+            author.append(attr[1])
+        elif 0 <= attr[0].find("ee"):
+            ee.append(attr[1])
+        elif 0 <= attr[0].find("title"):
+            title = attr[1]
+        elif 0 <= attr[0].find("year"):
+            year = attr[1]
+        elif 0 <= attr[0].find("isbn"):
+            isbn = attr[1]
+        elif 0 <= attr[0].find("publisher"):
+            publisher = attr[1]
+        elif 0 <= attr[0].find("series"):
+            series = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
+    fkt.insertBuch(author, ee, title, year, isbn, publisher, series)
 
     print("<---parseBook")
 
 def parseIncollection(taglist):
     global f
     global line
+    ee = []
+    title = ""
+    pages = ""
+    year = 0
+    booktitle = ""
+    url = ""
+    crossref = ""
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -182,8 +281,24 @@ def parseIncollection(taglist):
         if 0 <= attr[0].find("/incollection"):
             line = line[line.find(">"):]
             a = 0
+        elif 0 <= attr[0].find("ee"):
+            ee.append(attr[1])
+        elif 0 <= attr[0].find("title"):
+            title = attr[1]
+        elif 0 <= attr[0].find("pages"):
+            pages = attr[1]
+        elif 0 <= attr[0].find("year"):
+            year = attr[1]
+        elif 0 <= attr[0].find("booktitle"):
+            booktitle = attr[1]
+        elif 0 <= attr[0].find("crossref"):
+            crossref = attr[1]
+        elif 0 <= attr[0].find("url"):
+            url = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
+
+    fkt.saveIncollection(title, ee, pages, year, booktitle, crossref, url)
 
     print("<---parseIncollection")
 
@@ -247,6 +362,6 @@ def parseWww(taglist):
             title = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
-    fkt.insertHomepage(title, author)
+    fkt.insertHomepage(title, author, note, url)
 
     print("<---parseArticle")
