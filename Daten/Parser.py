@@ -2,6 +2,9 @@ import Datenbank.Funktionen as fkt
 global f
 global line
 
+# readTag(tag)
+# tag = Alles was in den Klammern steht "<",">"
+# return = Eine Liste wo eintrag 0 der Name des Tags ist. Danach immer Attribut und Attributwert
 def readTag(tag):
 
     taglist = tag.split(" ")
@@ -18,6 +21,9 @@ def readTag(tag):
 
     return ret
 
+# readAttribute(end)
+# end = Ist das Endtag von dem Tag wo die Unterpunkte herausgefunden werden
+# return = eine Liste mit Eintrag 0 = Nametag und 1 = Wert
 def readAttribute(end):
     global f
     global line
@@ -41,6 +47,11 @@ def readAttribute(end):
         print(ret)
         return ret
 
+
+# startparser(dateipfad)
+# dateipfad = Welche Datei soll eingelesen werden
+# Hier wird Tag nach Tag überprüft und jenach Tag ein Fall ausgewählt
+# return = void
 def startparser(dateipfad):
     global f
     global line
@@ -127,7 +138,7 @@ def parseArticle(taglist):
             journal = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
-    fkt.insertPublikation(title, year, author, ee, journal, volume, number, pages, cite)
+    fkt.saveArticle(title, year, author, ee, journal, volume, number, pages, cite)
     print("<---parseArticle")
 
 def parseInproceedings(taglist):
@@ -139,6 +150,7 @@ def parseInproceedings(taglist):
     pages = ""
     year = 0
     booktitle = ""
+    volume = ""
     url = ""
     crossref = ""
     line = line.strip()
@@ -226,8 +238,8 @@ def parseProceeding(taglist):
 def parseBook(taglist):
     global f
     global line
-    author = ""
-    ee = ""
+    author = []
+    ee = []
     title = ""
     year = 0
     isbn = ""
@@ -258,13 +270,14 @@ def parseBook(taglist):
             series = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
-    fkt.insertBuch(author, ee, title, year, isbn, publisher, series)
+    fkt.saveBuch(author, ee, title, year, isbn, publisher, series)
 
     print("<---parseBook")
 
 def parseIncollection(taglist):
     global f
     global line
+    author = []
     ee = []
     title = ""
     pages = ""
@@ -281,6 +294,8 @@ def parseIncollection(taglist):
         if 0 <= attr[0].find("/incollection"):
             line = line[line.find(">"):]
             a = 0
+        elif 0 <= attr[0].find("author"):
+            ee.append(attr[1])
         elif 0 <= attr[0].find("ee"):
             ee.append(attr[1])
         elif 0 <= attr[0].find("title"):
@@ -298,7 +313,7 @@ def parseIncollection(taglist):
         else:
             print(attr[0] + " : " + attr[1])
 
-    fkt.saveIncollection(title, ee, pages, year, booktitle, crossref, url)
+    fkt.saveIncollection(author, title, ee, pages, year, booktitle, crossref, url)
 
     print("<---parseIncollection")
 
@@ -362,6 +377,6 @@ def parseWww(taglist):
             title = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
-    fkt.insertHomepage(title, author, note, url)
+    fkt.saveHomepage(title, author, note, url)
 
     print("<---parseArticle")

@@ -9,7 +9,7 @@ cur = con.cursor()
 cur.execute('''DROP TABLE IF EXISTS AUTHOR CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE AUTHOR
-      (KEY CHAR(50) PRIMARY KEY     NOT NULL,
+      (KEY CHAR(100) PRIMARY KEY     NOT NULL,
       NAME       CHAR(100)        NOT NULL);
       ''')
 print("Table created successfully")
@@ -18,9 +18,23 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS PUBLIKATION CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE PUBLIKATION
-      (KEY CHAR(50) PRIMARY KEY     NOT NULL,
-      TITEL           CHAR(100)     NOT NULL,
-      LAST_MODIFIED   INT           NOT NULL);''')
+      (ID SERIAL PRIMARY KEY NOT NULL, 
+      KEY CHAR(50)  ,
+      TITEL           CHAR(300)     NOT NULL);''')
+print("Table created successfully")
+con.commit()
+
+cur.execute('''DROP TABLE IF EXISTS AUTHOR_SCHREIBT_PUBLIKATION CASCADE;''')
+con.commit()
+cur.execute('''CREATE TABLE AUTHOR_SCHREIBT_PUBLIKATION
+      (KEY CHAR(100)     NOT NULL,
+      ID INTEGER       NOT NULL,
+      PRIMARY KEY(KEY,ID),
+      FOREIGN KEY(KEY) REFERENCES AUTHOR(KEY)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+      FOREIGN KEY(ID) REFERENCES PUBLIKATION(ID)
+      ON DELETE CASCADE ON UPDATE CASCADE);
+      ''')
 print("Table created successfully")
 con.commit()
 
@@ -28,8 +42,8 @@ cur.execute('''DROP TABLE IF EXISTS ELEKTRONISCHE_VERSION CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE ELEKTRONISCHE_VERSION
       (ADRESSE CHAR(100) PRIMARY KEY     NOT NULL,
-      PublikationKey           CHAR(50)     NOT NULL,
-      FOREIGN KEY(PublikationKey) REFERENCES PUBLIKATION(KEY)
+      PublikationID           INTEGER     NOT NULL,
+      FOREIGN KEY(PublikationID) REFERENCES PUBLIKATION(ID)
       ON DELETE CASCADE ON UPDATE CASCADE);
       ''')
 print("Table created successfully")
@@ -40,7 +54,7 @@ con.commit()
 cur.execute('''CREATE TABLE HOMEPAGE
       (ID SERIAL PRIMARY KEY  NOT NULL,
       URL CHAR(100)              ,
-      TITEL     CHAR(50)            NOT NULL,
+      TITEL     CHAR(200)            NOT NULL,
       NOTIZ     TEXT );
       ''')
 print("Table created successfully")
@@ -82,9 +96,8 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS BEARBEITER CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE BEARBEITER
-      (ID SERIAL PRIMARY KEY    NOT NULL,
-      VORNAME       CHAR(50)    NOT NULL,
-      NACHNAME      CHAR(50)    NOT NULL);
+      (KEY CHAR(100) PRIMARY KEY     NOT NULL,
+      NAME       CHAR(100)    NOT NULL);
       ''')
 print("Table created successfully")
 con.commit()
@@ -92,12 +105,12 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS Publikation_hat_Zitat CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE Publikation_hat_Zitat
-      (HatZitatKey CHAR(50)      NOT NULL,
-      IstZitiertKey CHAR(50)      NOT NULL,
-      PRIMARY KEY(HatZitatKey,IstZitiertKey),
-      FOREIGN KEY(HatZitatKey) REFERENCES PUBLIKATION(Key)
+      (HatZitatID INTEGER      NOT NULL,
+      IstZitiertID INTEGER      NOT NULL,
+      PRIMARY KEY(HatZitatID,IstZitiertID),
+      FOREIGN KEY(HatZitatID) REFERENCES PUBLIKATION(ID)
       ON DELETE CASCADE ON UPDATE CASCADE,
-      FOREIGN KEY(IstZitiertKey) REFERENCES PUBLIKATION(Key)
+      FOREIGN KEY(IstZitiertID) REFERENCES PUBLIKATION(ID)
       ON DELETE CASCADE ON UPDATE CASCADE);
       ''')
 print("Table created successfully")
@@ -108,7 +121,7 @@ con.commit()
 cur.execute('''CREATE TABLE Author_hat_Homepage
       (AuthorKey CHAR(50)     NOT NULL,
       HomepageId INT     NOT NULL,
-      PRIMARY KEY(AuthorKey,HomepageUrl),
+      PRIMARY KEY(AuthorKey,HomepageId),
       FOREIGN KEY(AuthorKey) REFERENCES AUTHOR(Key)
       ON DELETE CASCADE ON UPDATE CASCADE,
       FOREIGN KEY(HomepageId) REFERENCES HOMEPAGE(Id)
@@ -120,10 +133,10 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS Bearbeiter_bearbeitet_Konferenz CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE Bearbeiter_bearbeitet_Konferenz
-      (BearbeiterId INT       NOT NULL,
+      (BearbeiterKey CHAR(100)       NOT NULL,
       KonferenzId INT       NOT NULL,
-      PRIMARY KEY(BearbeiterId,KonferenzId),
-      FOREIGN KEY(BearbeiterId) REFERENCES BEARBEITER(Id)
+      PRIMARY KEY(BearbeiterKey,KonferenzId),
+      FOREIGN KEY(BearbeiterKey) REFERENCES BEARBEITER(Key)
       ON DELETE CASCADE ON UPDATE CASCADE,
       FOREIGN KEY(KonferenzId) REFERENCES KONFERENZ(Id)
       ON DELETE CASCADE ON UPDATE CASCADE);
@@ -134,10 +147,10 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS Publikation_ist_in_Konferenz CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE Publikation_ist_in_Konferenz
-      (PublikationKey CHAR(50)       NOT NULL,
+      (PublikationID INT      NOT NULL,
       KonferenzId INT       NOT NULL,
-      PRIMARY KEY(PublikationKey,KonferenzId),
-      FOREIGN KEY(PublikationKey) REFERENCES PUBLIKATION(Key)
+      PRIMARY KEY(PublikationID,KonferenzId),
+      FOREIGN KEY(PublikationID) REFERENCES PUBLIKATION(ID)
       ON DELETE CASCADE ON UPDATE CASCADE,
       FOREIGN KEY(KonferenzId) REFERENCES KONFERENZ(Id)
       ON DELETE CASCADE ON UPDATE CASCADE);
@@ -148,10 +161,10 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS Publikation_ist_in_Fachzeitschrift CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE Publikation_ist_in_Fachzeitschrift
-      (PublikationKey CHAR(50)       NOT NULL,
+      (PublikationID INT       NOT NULL,
       FachzeitschriftId INT       NOT NULL,
-      PRIMARY KEY(PublikationKey,FachzeitschriftId),
-      FOREIGN KEY(PublikationKey) REFERENCES PUBLIKATION(Key)
+      PRIMARY KEY(PublikationID,FachzeitschriftId),
+      FOREIGN KEY(PublikationID) REFERENCES PUBLIKATION(ID)
       ON DELETE CASCADE ON UPDATE CASCADE,
       FOREIGN KEY(FachzeitschriftId) REFERENCES FACHZEITSCHRIFT(Id)
       ON DELETE CASCADE ON UPDATE CASCADE);
@@ -162,10 +175,10 @@ con.commit()
 cur.execute('''DROP TABLE IF EXISTS Publikation_ist_in_Buch CASCADE;''')
 con.commit()
 cur.execute('''CREATE TABLE Publikation_ist_in_Buch
-      (PublikationKey CHAR(50)       NOT NULL,
+      (PublikationID INT      NOT NULL,
       BuchId INT       NOT NULL,
-      PRIMARY KEY(PublikationKey,BuchId),
-      FOREIGN KEY(PublikationKey) REFERENCES PUBLIKATION(Key)
+      PRIMARY KEY(PublikationID,BuchId),
+      FOREIGN KEY(PublikationID) REFERENCES PUBLIKATION(ID)
       ON DELETE CASCADE ON UPDATE CASCADE,
       FOREIGN KEY(BuchId) REFERENCES BUCH(Id)
       ON DELETE CASCADE ON UPDATE CASCADE);
