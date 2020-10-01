@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE dblp SYSTEM "dblp.dtd">
+<dblp>
 <article mdate="2020-03-12" key="tr/meltdown/m18" publtype="informal">
 <author>Moritz Lipp</author>
 <author>Michael Schwarz 0001</author>
@@ -15,4 +16,52 @@
 <journal>meltdownattack.com</journal>
 <ee type="oa">https://meltdownattack.com/meltdown.pdf</ee>
 <year>2018</year>
-</article>
+</article><article mdate="2020-03-12" key="tr/meltdown/m18" publtype="informal">
+<author>Moritz Lipp</author>
+<author>Michael Schwarz 0001</author>
+<author>Daniel Gruss</author>
+<author>Thomas Prescher 0002</author>
+<author>Werner Haas</author>
+<author>Stefan Mangard</author>
+<author>Paul Kocher</author>
+<author>Daniel Genkin</author>
+<author>Yuval Yarom</author>
+<author>Mike Hamburg</author>
+<title>Meltdown</title>
+<journal>meltdownattack.com</journal>
+<ee type="oa">https://meltdownattack.com/meltdown.pdf</ee>
+<year>2018</year>
+</article><inproceedings mdate="2017-05-24" key="conf/hci/ItoW16">
+<author>Teruaki Ito</author>
+<author>Tomio Watanabe</author>
+<title>Motion Control Algorithm of ARM-COMS for Entrainment Enhancement.</title>
+<pages>339-346</pages>
+<year>2016</year>
+<booktitle>HCI (4)</booktitle>
+<ee>https://doi.org/10.1007/978-3-319-40349-6_32</ee>
+<crossref>conf/hci/2016-4</crossref>
+<url>db/conf/hci/hci2016-4.html#ItoW16</url>
+</inproceedings><inproceedings mdate="2017-06-02" key="conf/hci/PaolisPA09">
+<author orcid="0000-0003-1274-9070">Lucio Tommaso De Paolis</author>
+<author>Marco Pulimeno</author>
+<author orcid="0000-0001-5902-6983">Giovanni Aloisio</author>
+<title>An Advanced Modality of Visualization and Interaction with Virtual Models of the Human Body.</title>
+<pages>13-18</pages>
+<year>2016</year>
+<booktitle>HCI (4)</booktitle>
+<ee>https://doi.org/10.1007/978-3-642-02809-0_2</ee>
+<crossref>conf/hci/2009-11</crossref>
+<url>db/conf/hci/hci2009-11.html#PaolisPA09</url>
+</inproceedings><incollection mdate="2019-09-05" key="conf/tphol/HarrisonSA06">
+<author>John Harrison 0001</author>
+<author>Konrad Slind</author>
+<author>Rob Arthan</author>
+<title>HOL.</title>
+<pages>11-19</pages>
+<year>2006</year>
+<crossref>conf/tphol/2006provers</crossref>
+<booktitle>The Seventeen Provers of the World</booktitle>
+<ee>https://doi.org/10.1007/11542384_3</ee>
+<url>db/conf/tphol/lncs3600.html#HarrisonSA06</url>
+</incollection>
+</dblp>

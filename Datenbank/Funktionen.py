@@ -10,7 +10,7 @@ def saveProceedings(editors, ees, title, series, auflage, jahr, url, buchtitel, 
     print("Saved")
 
 
-def saveInproceedings(authors, ees, title, pages, auflage, jahr, url, crossref, buchtitel):
+def saveInproceedings(authors, ees, title, seiten, auflage, jahr, url, crossref, buchtitel):
     publikationid = insertPublikation(title)
     for author in authors:
         author = author.strip()
@@ -19,11 +19,13 @@ def saveInproceedings(authors, ees, title, pages, auflage, jahr, url, crossref, 
     for ee in ees:
         insertElektronischeVersion(ee, publikationid)
     konferenzid = insertKonferenz(title, buchtitel, jahr, auflage)
+    buchid = insertBuch(buchtitel, jahr, "")
+    insertPublikation_ist_in_Buch(publikationid, buchid)
     insertPublikation_ist_in_Konferenz(publikationid, konferenzid)
-    print("Saved")
+    print("Inproceeding Saved")
 
 
-def saveIncollection(authors, title, ees, seiten, jahr, booktitle, crossref, url):
+def saveIncollection(authors, title, ees, seiten, jahr, booktitel, crossref, url):
     publikationid = insertPublikation(title)
     for author in authors:
         author = author.strip()
@@ -31,9 +33,9 @@ def saveIncollection(authors, title, ees, seiten, jahr, booktitle, crossref, url
         insertAuthor_schreibt_Publikation(author, publikationid)
     for ee in ees:
         insertElektronischeVersion(ee, publikationid)
-    buchid = insertBuch(booktitle, jahr, "")
+    buchid = insertBuch(booktitel, jahr, "")
     insertPublikation_ist_in_Buch(publikationid, buchid)
-    print("Saved")
+    print("Incollection Saved")
 
 
 def saveArticle(title, year, authors, ees, journal, volume, number, pages, cite):
@@ -73,7 +75,6 @@ def savePhdthesis():
 
 def insertPublikation(titel):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO PUBLIKATION (TITEL)
                     VALUES (%s) RETURNING ID;
@@ -82,32 +83,28 @@ def insertPublikation(titel):
     ret = cur.fetchone()[0]
     print("Table created successfully")
     con.commit()
-    print("Saved")
     return ret
 
 
 def insertAuthor(key):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     print(key)
     key = key.strip()
     list = key.split(" ")
     name = ""
     if isinstance(list[-1], int):
-        for x in list[:-1]:
+        for x in list[:-2]:
             name = name + " " + x
     else:
         for x in list:
             name = name + " " + x
     name = name.strip()
-    print(name)
     try:
         cur = con.cursor()
         sql = '''INSERT INTO AUTHOR (KEY, NAME)
                     VALUES (%s,%s);
                  '''
         cur.execute(sql, (key, name, ))
-        print("Table created successfully")
         con.commit()
         print("Author Saved")
     except:
@@ -117,20 +114,17 @@ def insertAuthor(key):
 
 def insertAuthor_schreibt_Publikation(key,id):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO AUTHOR_SCHREIBT_PUBLIKATION (KEY,ID)
                         VALUES (%s,%s);
                       '''
     cur.execute(sql, (key, id, ))
-    print("Table created successfully")
     con.commit()
-    print("Saved")
+    print("Author_schreibt_Publikation Saved")
 
 
 def insertBearbeiter(key):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     key = key.strip()
     list = key.split(" ")
     name = ""
@@ -148,7 +142,6 @@ def insertBearbeiter(key):
                     VALUES (%s,%s);
                  '''
         cur.execute(sql, (key, name, ))
-        print("Table created successfully")
         con.commit()
         print("Bearbeiter Saved")
     except:
@@ -157,7 +150,6 @@ def insertBearbeiter(key):
 
 def insertHomepage(titel, notiz, url):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO HOMEPAGE (titel, notiz, url)
                             VALUES (%s,%s,%s)
@@ -165,7 +157,6 @@ def insertHomepage(titel, notiz, url):
                           '''
     cur.execute(sql, (titel, notiz, url, ))
     ret = cur.fetchone()[0]
-    print("Table created successfully")
     con.commit()
     print("Saved")
     return ret
@@ -173,55 +164,49 @@ def insertHomepage(titel, notiz, url):
 
 def insertAuthor_hat_Homepage(author, id):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO Author_hat_Homepage (AuthorKey, HomepageId)
                                 VALUES (%s,%s);
                               '''
     cur.execute(sql, (author.strip(), id, ))
-    print("Table created successfully")
     con.commit()
     print("Saved")
 
 
 def insertBuch(titel, jahr, publisher):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     try:
         sql = '''SELECT ID FROM BUCH
-                WHERE TITEL LIKE %s AND
-                JAHR = %s ;'''
+                    WHERE TITEL = %s AND
+                    JAHR = %s ;'''
         cur.execute(sql, (titel, jahr,))
-        ret = cur.fetchone()[0]
-        print("Table created successfully")
         con.commit()
-        print("Saved")
-    except:
+        ret = cur.fetchall()[0][0]
+        print("Buch gefunden")
+        print(ret)
+    except :
         sql = '''INSERT INTO BUCH (TITEL, JAHR, PUBLISHER)
                                         VALUES (%s,%s,%s)
                                         RETURNING ID;
                                       '''
         cur.execute(sql, (titel, jahr, publisher, ))
         ret = cur.fetchone()[0]
-        print("Table created successfully")
         con.commit()
-        print("Saved")
+        print("Buch Saved")
     return ret
 
 
 def insertKonferenz(titel, buchtitel, jahr, auflage):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     try:
         sql = '''SELECT ID FROM KONFERENZ
-                WHERE TITEL LIKE %s AND
-                BUCHTITEL LIKE %s AND
+                WHERE TITEL = %s AND
+                BUCHTITEL = %s AND
                 JAHR = %s ;'''
         cur.execute(sql, (titel, buchtitel, jahr,))
-        ret = cur.fetchall()[0]
-        print("Table created successfully")
+        ret = cur.fetchall()[0][0]
         con.commit()
         print("Saved")
     except:
@@ -230,7 +215,6 @@ def insertKonferenz(titel, buchtitel, jahr, auflage):
                                             RETURNING ID;'''
         cur.execute(sql, (titel, buchtitel, jahr, auflage, ))
         ret = cur.fetchone()[0]
-        print("Table created successfully")
         con.commit()
         print("Saved")
     return ret
@@ -238,7 +222,6 @@ def insertKonferenz(titel, buchtitel, jahr, auflage):
 
 def insertFachzeitschrift(name, url, jahr, seiten, auflage):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO FACHZEITSCHRIFT (NAME, URL, JAHR, SEITEN, AUFLAGE)
                                             VALUES (%s,%s,%s,%s,%s)
@@ -246,7 +229,6 @@ def insertFachzeitschrift(name, url, jahr, seiten, auflage):
                                           '''
     cur.execute(sql, (name, url, jahr, seiten, auflage, ))
     ret = cur.fetchone()[0]
-    print("Table created successfully")
     con.commit()
     print("Saved")
     return ret
@@ -254,7 +236,6 @@ def insertFachzeitschrift(name, url, jahr, seiten, auflage):
 
 def insertElektronischeVersion(adresse, id):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     try:
         cur = con.cursor()
         sql = '''INSERT INTO ELEKTRONISCHE_VERSION (ADRESSE, PUBLIKATIONID)
@@ -269,70 +250,58 @@ def insertElektronischeVersion(adresse, id):
 
 def insertPublikation_hat_Zitat(hatzitatId, istzitatId):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO Publikation_hat_Zitat (HatZitatID, IstZitiertID)
                                                 VALUES (%s,%s);'''
     cur.execute(sql, (hatzitatId, istzitatId, ))
-    print("Table created successfully")
     con.commit()
     print("Saved")
 
 
 def insertBearbeiter_bearbeitet_Konferenz(bearbeiterKey, konferenzId):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO Bearbeiter_bearbeitet_Konferenz (BearbeiterKey, KonferenzId)
                                                 VALUES (%s,%s);'''
     cur.execute(sql, (bearbeiterKey, konferenzId, ))
-    print("Table created successfully")
     con.commit()
     print("Saved")
 
 
 def insertPublikation_ist_in_Konferenz(publikationID, konferenzId):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO Publikation_ist_in_Konferenz (PublikationID, KonferenzId)
                                                 VALUES (%s,%s);'''
     cur.execute(sql, (publikationID, konferenzId, ))
-    print("Table created successfully")
     con.commit()
     print("Saved")
 
 
 def insertPublikation_ist_in_Fachzeitschrift(publikationID, fachzeitschriftId):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO Publikation_ist_in_Fachzeitschrift (PublikationID, FachzeitschriftId)
                                                 VALUES (%s,%s);'''
     cur.execute(sql, (publikationID, fachzeitschriftId, ))
-    print("Table created successfully")
     con.commit()
     print("Saved")
 
 
 def insertPublikation_ist_in_Buch(publikationID, buchId):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO Publikation_ist_in_Buch (PublikationID, BuchId)
                                                 VALUES (%s,%s);'''
     cur.execute(sql, (publikationID, buchId, ))
-    print("Table created successfully")
     con.commit()
     print("Saved")
 
 def insertZitat(hatZitat,istZitat):
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
-    print("Database opened successfully")
     cur = con.cursor()
     sql = '''INSERT INTO Publikation_hat_Zitat (HatZitatID, IstZitiertID)
                                                     VALUES (%s,%s);'''
     cur.execute(sql, (hatZitat, istZitat,))
-    print("Table created successfully")
     con.commit()
     print("Saved")

@@ -7,8 +7,25 @@
 	\section{Einleitung}
 	Weltweit werden in fast allen Programmen die wir Alltäglich benutzen Datenbanken verwendet. Sei es unsere Freundesliste, eine Website und sogar beim Einkaufen überall treffen wir auf sie. Es gibt viele Formen von Datenbanken wie  zum Beispiel relationale, hierarchische, objektorientierte Datenbanken und noch viele mehr. In dieser Bachelorarbeit wird ein Knowlegde Graph in eine relationale Datenbank umgewandelt und anschließend noch mit einem weiteren Graphen erweitert. Dabei stellt sich natürlich die Frage was ist ein Knowledge Graph überhaupt. Grundsätzlich ist es auch eine Form von Datenbank. Man kann sich die Datenbank am besten so vorstellen das man Daten so speichert das man sie leichter suchen kann. Deshalb werden Daten meist mit Themen Gebieten zusammen verbunden. Wie bei Suchmaschinen wird mit einem Schlüsselwort gesucht und in dieser Art von Datenbank stehen alle Daten die etwas damit zu tun haben in direkter Verbindung mit dem Schlüsselwort. So lässt es sich einfacher und schneller in der Datenbank suchen. Im Gegensatz dazu steht jetzt die relationale Datenbank in die der Knowledge Graph eingefügt wird. Hierbei steht nicht das suchen im Vordergrund sondern in welcher Beziehung die Daten zueinander stehen. Damit ist der Grundaufbau sehr Unterschiedlich und das ist die Aufgabe die es gilt zu überwinden. Die Knowlegde Graphen die benutzt werden sind der Microsoft Knowledge Graph und das Digital Bibliography \& Library Project (DBLP) der Universität Trier. Beide Graphen beinhalten Publikationen, Facharbeiten, Konferenzen und Fachbücher. Die Universität Trier beinhaltet nur Daten im Bereich der Informatik was die Daten Anzahl um einiges verringert. Hier sind nur grob 5,2 Millionen Publikationen vertreten. Im Gegensatz da zu hat der Microsoft Knowledge Graph keinen Fachbereich und ist international Vertreten. Daraus ergeben sich dann die 209,7 Millionen Publikationen in der Datenbank und das alleine im Jahre 2018. Für den ersten Teil werden die DBLP Daten in ein relationale Datenbank eingefügt. Dafür wird eine Datenbank entwickelt und anschließend alle Daten einzeln extrahiert und speichert. Dies machen wir mit der DBLP da es zunächst weniger Daten sind und in der DBLP keine richtigen Zitate vorhanden sind. Der zweite Teil ist nun das erweitern. Hier wird der Microsoft Knowledge Graph verwendet da er zu den ganzen Publikationen auch noch 146 Millionen Zitation enthält. Für diesen Zweck erhält die Datenbank zusätzlich eine Zitat Relationen wo die Daten eingefügt werden können. Vorher werden zunächst die richtigen Überschneidungen gefunden damit die richtigen Daten eingefügt werden.
 	
-	\section{Theoretisch}
+	\section{Teil 1 Extraktion}
+	Kommen wir nun zum ersten Teil die Extraktion. Dafür gucken wir uns zunächst die Daten an die wir Extrahieren wollen. Die DBLP bietet eine Request Schnitstelle an in der man auch suchen kann, aber für unseren Fall ist das Dumpfile sinnvoller. Das Dumpfile ist eine XML-Datei in der alle Daten der DBLP zu einem gewissen Zeitpunkt gespeichert sind. Das Dumpfile was benutzt wurde ist vom 13.05.2020. Es gibt eine Dokumentation die die XML-Datei beschreibt. Da diese schon "DBLP - Some Lessons Learned" heißt lässt es darauf schließen das einige Fehler bei dem Ursprünglichen Design aufgetreten sind. Die erste Dokumentation der DBLP ist vom 18. Juni 2009. Zu dem Zeitpunkt waren nur 532MB in der XML-Datei. Im Gegensatz da zu sind jetzt 2.806MB in der Datei also schon das 5-Fache der Ursprünglichen Datei. Durch das Wachstum wurden einige Anpassung getätigt die von der Dokumentation abweichen. So mit muss die Formatierung an Hand der Datei selber Herausgefunden werden. 
+	
+	Mit den Informationen wird dann ein Parser benötigt der die XML Datei ausliest. Für die meisten Parser ist eine Datei dieser Größe zu viel. Daher wird ein eigener Parser geschrieben. Durch die Dokumentation erfahren wir das es nur eine bestimmte Anzahl an Tags gibt die verwendet werden.
+	<!ELEMENT dblp (article|inproceedings|
+	 proceedings|book|incollection|
+	 phdthesis|mastersthesis|www)*>
+	Das macht die Erstellung des Parser übersichtlicher 
+	
+	\section{Teil 2 Erweiterung}
+	Für die Erweiterung wird der Microsoft Knowlegde Graph benutzt. Da wir hier nur Suchen und Einzelne Publikationen nur Ekrtahieren müssen lohnt sich die vorgehensweise mit Dumpfiles nicht. Da sie dazu auch noch mehrfach so groß wären. Deswegen verwenden wir hier das Project Academic Knowledge. In diesem Projekt gibt es die Academic Search API. Also eine Schnittstelle mit der man in dem Graph suchen und Daten auslesen kann. Es werden 4 Verschiedene GET-Requests zurverfügung gestellt. CalcHistogram, Evaluate, Interpret und Similarity. In dem Fall wird Evaluate verwendet da wir weder noch ein Histogram oder einen Vergleich brauchen. So suchen wir nach dem Titel und bekommen das ganze Zitat und die Titelid der zitierten Publikation.
+	
+	\begin{center}
+		Beispiel einfügen
+	\end{center}
+	
+	Diese werden nun in die Datenbank eingefügt. Mit der API kommt aber auch eine Grenze. Im Monat dürfen nur 10.000 Transaktionen getätigt werden. Dadurch werden hier nur selektive Beispiele präsentiert. 
+	
+	\section{Probleme}
 	\section{Fazit}
 	\appendix
-	Test Test Test
 \end{document}

@@ -139,7 +139,6 @@ def parseArticle(taglist):
         else:
             print(attr[0] + " : " + attr[1])
     fkt.saveArticle(title, year, author, ee, journal, volume, number, pages, cite)
-    print("<---parseArticle")
 
 def parseInproceedings(taglist):
     global f
@@ -184,8 +183,6 @@ def parseInproceedings(taglist):
             print(attr[0] + " : " + attr[1])
 
     fkt.saveInproceedings(author, ee, title, pages, volume, year, url, crossref, booktitle)
-
-    print("<---parseInproceedings")
 
 def parseProceeding(taglist):
     global f
@@ -233,8 +230,6 @@ def parseProceeding(taglist):
             print(attr[0] + " : " + attr[1])
     fkt.saveProceedings(editor, ee, title, series, volume, year, url, booktitle, isbn, publisher)
 
-    print("<---parseProceeding")
-
 def parseBook(taglist):
     global f
     global line
@@ -272,7 +267,6 @@ def parseBook(taglist):
             print(attr[0] + " : " + attr[1])
     fkt.saveBuch(author, ee, title, year, isbn, publisher, series)
 
-    print("<---parseBook")
 
 def parseIncollection(taglist):
     global f
@@ -295,7 +289,7 @@ def parseIncollection(taglist):
             line = line[line.find(">"):]
             a = 0
         elif 0 <= attr[0].find("author"):
-            ee.append(attr[1])
+            author.append(attr[1])
         elif 0 <= attr[0].find("ee"):
             ee.append(attr[1])
         elif 0 <= attr[0].find("title"):
@@ -315,8 +309,6 @@ def parseIncollection(taglist):
 
     fkt.saveIncollection(author, title, ee, pages, year, booktitle, crossref, url)
 
-    print("<---parseIncollection")
-
 def parsePhdthesis(taglist):
     global f
     global line
@@ -332,8 +324,6 @@ def parsePhdthesis(taglist):
         else:
             print(attr[0] + " : " + attr[1])
 
-    print("<---parsePhdthesis")
-
 def parseMasterthesis(taglist):
     global f
     global line
@@ -348,8 +338,6 @@ def parseMasterthesis(taglist):
             a = 0
         else:
             print(attr[0] + " : " + attr[1])
-
-    print("<---parseMasterthesis")
 
 def parseWww(taglist):
     global f
@@ -379,4 +367,3 @@ def parseWww(taglist):
             print(attr[0] + " : " + attr[1])
     fkt.saveHomepage(title, author, note, url)
 
-    print("<---parseArticle")

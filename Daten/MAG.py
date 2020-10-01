@@ -9,13 +9,14 @@ def sucheZitate(titel):
     params = urllib.parse.urlencode({
         # Request parameters
         'model': 'latest',
-        'attributes': 'AA.AfN,CitCon',
         'count': '10',
         'offset': '0',
+        'orderby': '{string}',
+        'attributes': 'CitCon',
     })
 
-    expr = "Composite(DN=='" +  titel + "')"
-    query = "/academic/v1.0/calchistogram?expr={expr}&%s".format(expr=expr) % params
+    expr = "Composite(Ti=='" + titel + "')"
+    query = "/academic/v1.0/evaluate?expr={expr}&%s".format(expr=expr) % params
     query = urllib.parse.quote(query)
 
     try:
@@ -39,13 +40,14 @@ def sucheTitel(titelid):
     params = urllib.parse.urlencode({
         # Request parameters
         'model': 'latest',
-        'attributes': 'DN',
         'count': '10',
         'offset': '0',
+        'orderby': '{string}',
+        'attributes': 'Ti',
     })
 
-    expr = "Composite(Ti=='" + titelid + "')"
-    query = "/academic/v1.0/calchistogram?expr={expr}&%s".format(expr=expr) % params
+    expr = "Composite(Id=='" + titelid + "')"
+    query = "/academic/v1.0/evaluate?expr={expr}&%s".format(expr=expr) % params
     query = urllib.parse.quote(query)
 
     try:
