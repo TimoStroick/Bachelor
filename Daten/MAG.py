@@ -1,5 +1,7 @@
 import http.client, urllib.request, urllib.parse, urllib.error, base64, json
 
+
+
 def sucheZitate(titel):
     headers = {
         # Request headers
@@ -11,24 +13,28 @@ def sucheZitate(titel):
         'model': 'latest',
         'count': '10',
         'offset': '0',
-        'orderby': '{string}',
+        #'orderby': '{string}',
         'attributes': 'CitCon',
     })
 
-    expr = "Composite(Ti=='" + titel + "')"
-    query = "/academic/v1.0/evaluate?expr={expr}&%s".format(expr=expr) % params
-    query = urllib.parse.quote(query)
+    titel = urllib.parse.quote(titel)
+    expr = "Ti='" + titel + "'"
+    query = "/academic/v1.0/evaluate?expr={expr}&%s"% params
+    query = query.format(expr=expr)
 
     try:
         conn = http.client.HTTPSConnection('api.labs.cognitive.microsoft.com')
-        conn.request("GET", query, "{body}", headers)
+        conn.request("GET", query, None, headers)
         response = conn.getresponse()
         data = response.read()
         js = json.loads(data)
-        print(json.dumps(js["histograms"][""], indent=3))
         conn.close()
+        return js
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
+        return None;
+
+
 
 
 def sucheTitel(titelid):
@@ -42,13 +48,14 @@ def sucheTitel(titelid):
         'model': 'latest',
         'count': '10',
         'offset': '0',
-        'orderby': '{string}',
-        'attributes': 'Ti',
+        #'orderby': '{string}',
+        'attributes': 'DN',
     })
 
-    expr = "Composite(Id=='" + titelid + "')"
-    query = "/academic/v1.0/evaluate?expr={expr}&%s".format(expr=expr) % params
-    query = urllib.parse.quote(query)
+    titel = urllib.parse.quote(titelid)
+    expr = "Id=" + titelid + ""
+    query = "/academic/v1.0/evaluate?expr={expr}&%s" % params
+    query = query.format(expr=expr)
 
     try:
         conn = http.client.HTTPSConnection('api.labs.cognitive.microsoft.com')
@@ -56,7 +63,8 @@ def sucheTitel(titelid):
         response = conn.getresponse()
         data = response.read()
         js = json.loads(data)
-        print(json.dumps(js["histograms"][""], indent=3))
+        return js
         conn.close()
     except Exception as e:
         print("[Errno {0}] {1}".format(e.errno, e.strerror))
+        return None

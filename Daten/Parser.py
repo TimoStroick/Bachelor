@@ -1,4 +1,4 @@
-import Datenbank.Funktionen as fkt
+import Datenbank.DBParser as fkt
 global f
 global line
 
@@ -44,7 +44,6 @@ def readAttribute(end):
             line = f.readline()
         return ret
     else:
-        print(ret)
         return ret
 
 
@@ -62,28 +61,20 @@ def startparser(dateipfad):
         list = readTag(line[(line.find("<")+1):line.find(">")])
         line = line[(line.find(">")+1):]
         if 0 <= list[0].find("article"):
-            print("--->parseArticle(list)")
             parseArticle(list)
         elif 0 <= list[0].find("inproceedings"):
-            print("--->parseInproceedings(list)")
             parseInproceedings(list)
         elif 0 <= list[0].find("proceeding"):
-            print("--->parseProceeding(list)")
             parseProceeding(list)
         elif 0 <= list[0].find("book"):
-            print("--->parseBook(list)")
             parseBook(list)
         elif 0 <= list[0].find("incollection"):
-            print("--->parseIncollection(list)")
             parseIncollection(list)
         elif 0 <= list[0].find("phdthesis"):
-            print("--->parsePhdthesis(list)")
             parsePhdthesis(list)
         elif 0 <= list[0].find("masterthesis"):
-            print("--->parseMasterthesis(list)")
             parseMasterthesis(list)
         elif 0 <= list[0].find("www"):
-            print("--->parseWww(list)")
             parseWww(list)
         elif 0 <= list[0].find("/dblp"):
             print("end")
@@ -107,7 +98,7 @@ def parseArticle(taglist):
     year = 0
     journal = ""
     volume = ""
-    number = ""
+    publisher = ""
     pages = ""
     line = line.strip()
     if 1 > len(line):
@@ -130,15 +121,15 @@ def parseArticle(taglist):
             year = attr[1]
         elif 0 <= attr[0].find("volume"):
             volume = attr[1]
-        elif 0 <= attr[0].find("number"):
-            number = attr[1]
         elif 0 <= attr[0].find("pages"):
             pages = attr[1]
         elif 0 <= attr[0].find("journal"):
             journal = attr[1]
+        elif 0 <= attr[0].find("publisher"):
+            publisher = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
-    fkt.saveArticle(title, year, author, ee, journal, volume, number, pages, cite)
+    fkt.saveArticle(title, year, author, ee, journal, volume, pages, cite, publisher)
 
 def parseInproceedings(taglist):
     global f
@@ -152,6 +143,8 @@ def parseInproceedings(taglist):
     volume = ""
     url = ""
     crossref = ""
+    serie = ""
+    publisher = ""
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -179,10 +172,14 @@ def parseInproceedings(taglist):
             crossref = attr[1]
         elif 0 <= attr[0].find("booktitle"):
             booktitle = attr[1]
+        elif 0 <= attr[0].find("publisher"):
+            publisher = attr[1]
+        elif 0 <= attr[0].find("serie"):
+            serie = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
 
-    fkt.saveInproceedings(author, ee, title, pages, volume, year, url, crossref, booktitle)
+    fkt.saveInproceedings(author, ee, title, pages, volume, year, url, crossref, booktitle, serie, publisher)
 
 def parseProceeding(taglist):
     global f
@@ -192,7 +189,7 @@ def parseProceeding(taglist):
     title = ""
     booktitle = ""
     series = ""
-    volume = ""
+    volume = 0
     year = 0
     url = ""
     isbn = ""
@@ -237,9 +234,10 @@ def parseBook(taglist):
     ee = []
     title = ""
     year = 0
-    isbn = ""
+    isbn = []
     publisher = ""
     series = ""
+    volume = 0
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -258,14 +256,16 @@ def parseBook(taglist):
         elif 0 <= attr[0].find("year"):
             year = attr[1]
         elif 0 <= attr[0].find("isbn"):
-            isbn = attr[1]
+            isbn.append(attr[1])
         elif 0 <= attr[0].find("publisher"):
             publisher = attr[1]
         elif 0 <= attr[0].find("series"):
             series = attr[1]
+        elif 0 <= attr[0].find("volume"):
+            volume = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
-    fkt.saveBuch(author, ee, title, year, isbn, publisher, series)
+    fkt.saveBook(author, ee, title, year, isbn, publisher, series, volume)
 
 
 def parseIncollection(taglist):
@@ -312,6 +312,16 @@ def parseIncollection(taglist):
 def parsePhdthesis(taglist):
     global f
     global line
+    author = []
+    ee = []
+    isbn = []
+    title = ""
+    pages = ""
+    school = ""
+    publisher = ""
+    series = ""
+    volume = 0
+    year = 0
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -321,12 +331,40 @@ def parsePhdthesis(taglist):
         if 0 <= attr[0].find("/phdthesis"):
             line = line[line.find(">"):]
             a = 0
+        elif 0 <= attr[0].find("author"):
+            author.append(attr[1])
+        elif 0 <= attr[0].find("ee"):
+            ee.append(attr[1])
+        elif 0 <= attr[0].find("isbn"):
+            isbn.append(attr[1])
+        elif 0 <= attr[0].find("title"):
+            title = attr[1]
+        elif 0 <= attr[0].find("school"):
+            school = attr[1]
+        elif 0 <= attr[0].find("pages"):
+            pages = attr[1]
+        elif 0 <= attr[0].find("publisher"):
+            publisher = attr[1]
+        elif 0 <= attr[0].find("series"):
+            series = attr[1]
+        elif 0 <= attr[0].find("volume"):
+            volume = attr[1]
+        elif 0 <= attr[0].find("year"):
+            year = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
+
+    fkt.savePhdthesis(title, author, year, pages, publisher, series, volume, school, isbn, ee)
 
 def parseMasterthesis(taglist):
     global f
     global line
+    author = []
+    ee = []
+    title = ""
+    note = ""
+    year = 0
+    school = ""
     line = line.strip()
     if 1 > len(line):
         line = f.readline()
@@ -336,8 +374,20 @@ def parseMasterthesis(taglist):
         if 0 <= attr[0].find("/masterthesis"):
             line = line[line.find(">"):]
             a = 0
+        elif 0 <= attr[0].find("author"):
+            author.append(attr[1])
+        elif 0 <= attr[0].find("ee"):
+            ee.append(attr[1])
+        elif 0 <= attr[0].find("title"):
+            title = attr[1]
+        elif 0 <= attr[0].find("school"):
+            school = attr[1]
+        elif 0 <= attr[0].find("year"):
+            year = attr[1]
         else:
             print(attr[0] + " : " + attr[1])
+
+    fkt.saveMasterthesis(title, author, year, school, ee, note)
 
 def parseWww(taglist):
     global f
