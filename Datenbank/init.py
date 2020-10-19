@@ -19,7 +19,7 @@ def initialisieren():
     con.commit()
     cur.execute('''CREATE TABLE PUBLIKATION
           (ID SERIAL PRIMARY KEY NOT NULL, 
-          TITEL           VARCHAR(400)     NOT NULL,
+          TITEL           VARCHAR(500)     NOT NULL,
           JAHR      INTEGER  NOT NULL,
           UNIVERSITAET VARCHAR(100));''')
     print("Table created successfully")

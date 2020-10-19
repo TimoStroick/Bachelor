@@ -1,4 +1,13 @@
 %%% Die folgende Zeile nicht ändern!
 \section*{\ifthenelse{\equal{\sprache}{deutsch}}{Zusammenfassung}{Abstract}}
-%%% Zusammenfassung:
-Hier kommt eine ca.\ einseitige Zusammenfassung der Arbeit rein.
+%%% Zusammenfassung: Hier kommt eine ca.\ einseitige Zusammenfassung der Arbeit rein.
+
+
+
+In der folgenden Arbeit wird der Frage nachgegangen, ob es möglich ist, mehrere Knowledge Graphen in einer Datenbank zu vereinen. Dazu wird ein Parser erstellt, näher erklärt und beschrieben. Dieser soll die Daten von einem Knowledge Graphen, in diesem Fall die\textit{ Digital Biblography \& Library Project} der Universität Trier, extrahieren. Dieser Graph enthält Daten über Arbeiten, Konferenzen und Autoren. Für diese Daten wird eine Datenbank mit den typischen Maßnahmen für die Modellierung entworfen. Diese beinhalten das Erstellen eines ER-Modells, die Übertragung in ein relationales Schema und die darauffolgende Verschmelzung. Hierzu werden charakteristische Fehler dargelegt und wie man sie mittels Normalformen auflöst. Durch diese Normalisierungen wird festgestellt, dass es sich bei der Datenbank um die 3. Normalform handelt. Daraufhin wird die Datenbank mit Daten gefüllt.
+
+Die Daten für die Zitierungen werden aus dem \textit{Microsoft Academic Knowledge Graph} geholt und benutzt. Dafür wird die zur Verfügung gestellte API verwendet, mit der erste Zitate von den bereits gespeicherten Daten gesucht werden. Folglich werden zu den Zitaten die entsprechenden Titel herausgesucht, bis schließlich die Daten in der Datenbank vereint werden können. 
+
+Diese Vorgehensweise zeigt, dass die Vereinigung solcher Datenbanken möglich ist. Allerdings werden nicht immer sicher die richtigen Überschneidungen getroffen, da Publikationen keine eindeutige Identifikation haben. 
+
+

@@ -1,2 +1,15 @@
-\section{Ausblick}
-%todo
+\newpage
+\section{Fazit \& Ausblick}
+
+In diesem Teil werden erst die Erkenntnisse gezeigt, die nach der Arbeit durch Probleme, Herausforderungen und Ergebnisse erschlossen wurden. Danach wird ein Ausblick und Ideen auf zukünftige Projekte in der Richtung gegeben.
+
+Mit dieser Arbeit sollte gezeigt werden, ob es möglich ist, mehrere Datenquellen im Knowledge Graph Format in einer Datenbank zu vereinen. 
+
+Durch ein strukturiert aufgebautes Datenbankdesign, was die Grundlage darstellt, und einen Parser, der die Datenbank befüllt, konnte die erste Datenbank extrahiert werden. Die Performance des Parsers ist leider nicht optimal, weswegen zu Beginn mit mehr Zeit geplant werden muss. Zudem sollten die Datenmengen nicht unterschätzen werden, denn oftmals verbirgt sich mehr Aufwand als vorher gedacht, wie bspw., dass für fünf Millionen Publikationen nicht genau dieselbe Anzahl an Transaktionen zur Datenbank braucht werden. Hier zeigt sich auch das Zeitmanagement, denn 13 Tage Durchlaufdauer müssen zukünftig besser in die Planung einfließen. Dazu kommt noch ein großes Problem, welches durch die sehr wenig beschriebene Datenstruktur auftritt, die die Daten beim Suchen nicht immer alle findet. Für ‚masterthesis’ und ‚phdthesis’ wurden erst sehr spät entsprechende Beispieldatensätze gefunden, um deren Attribute zu bestimmen. Deshalb wurden diese auch erst relativ spät in die Datenbank aufgenommen.
+
+
+Anschließend wurden die zusätzlichen Zitate hinzugefügt und damit schlussendlich die beiden Datenquellen vereint. Hier stellt sich nur die Frage, ob die Publikationen in beiden Graphen dieselben sind, denn es könnte sein, dass zwei Arbeiten den gleichen Titel besitzen, im gleichen Jahr geschrieben und von den selben Autoren geschrieben wurden. Ein Titel ist nicht eindeutig, deshalb könnte es passieren, dass verschiedene Werke als gleich angesehen werden, es aber nicht sind. 
+
+Zusammenfassend wurde ein Parser erstellt, der die Daten aus einem Knowledge Graphen holt. Aus diesen Daten wurde dann eine Datenbank, die mit der Hilfe von Datenmodellierungstechniken entworfen und die Daten gespeichert wurden. Daraufhin wurde mit einer API die Daten aus einer weiteren Datenquelle geholt. Diese wurden dann an die Datenbank angepasst und hinzugefügt. Anschließend wurden noch Testausgaben aus der Datenbank vorgestellt. 
+
+Da es nicht sicher ist ob, sich Publikationen eindeutig über den Titel identifizieren, ist es wahrscheinlich sehr vom Vorteil, wenn eine Identifikationsnummer für Arbeiten erstellt wird. Mit dieser Nummer könnten Werke leichter in verschiedenen Datenquellen gefunden werden. Diese Idee gibt es schon für Autoren, da diese auch keine spezielle Identifikation haben. In diesem Fall würde für Autoren die Nummer heißen: ORCID ID. Leider ist diese noch nicht komplett durchgesetzt, aber es würde die Identifikation um ein vielfaches vereinfachen.

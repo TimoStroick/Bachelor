@@ -1,22 +1,54 @@
+\newpage
 \section{Ergebnis}
-Schluss endlich haben wir eine uns mit Python eine Datenbank aufgebaut. Dies haben wir mit erst mit der Planung und dann mit der Ausführung bewältigt. Zu nächst haben wir uns die Daten angeguckt. Dann haben wir daraus ein ER-Modell erstellt und dies in ein relationales Schema gebracht. Dieses Schema haben wir dann verschmolzen um die letzte theoretische Übersicht der Datenbank aufzuzeigen. Darauf hin haben wir uns Anomalien angeguckt und Normalformen um diese zu verhindern. Danach haben wir uns die eigentliche Erstellung der Datenbank angeguckt und wie man mit SQL eine Tabelle einfügt. Nun haben wir die Daten nur noch eingefügt und abgespeichert. 
 
-Dieses Einfügen klappt mit einer Geschwindigkeit von 40-60 Transaktionen die Sekunde, dass heißt nur für grob 5 Millionen Publikationen würden wir 100.000 Sekunden brauchen das sind 1667 Minuten oder auch ca. 28 Stunden. Davon abgesehen das noch 2 Millionen Autoren da zu kommen. Dazu kommt noch das Transaktionen nicht nicht Publikationen pro Sekunde sind, denn in Publikationen sind alleine zwischen 2-4 Autoren beteiligt die jedes mal Abgefragt werden müssen ob sie Existieren und wenn nicht angelegt werden. Hier müssen natürlich auch die Relationen angelegt werden die die beiden Tabellen verbindet. Daraus werden dann pro Publikation dann mindestens 6 Transaktionen mehr. Dazu kommen noch die ein bis zwei elektronischen Versionen pro Publikation mit den Relationen. Somit landen wir grob bei einer Dauer von 308 Stunden das sind fasst 13 Tage. Da durch viele erneute Anpassungen der Datenbank dieser Prozess wiederholt werden musste, werden hier nur Ausschnitte der bisherigen Ergebnisse gezeigt. 
 
-Dazu verwenden wir Data Querie Language(DQL) eine Datenabfragesprache die wieder ein Teil von SQL da stellt. Hiermit können wir Anfragen an die Datenbank stellen die uns dann dem entsprechende Antworten liefert. Mit diesem Teil von SQL kann in der Datenbank nichts geändert werden weder Struktur noch Daten.
+
+In diesem Abschnitt der Arbeit geht es nicht mehr um Planung und Aufbau der Datenbank sonder darum das die Planung geklappt hat. Erst fassen wir die Schritte zusammen, die wir bisher für die Extraktion erledigt haben. Dann zeigen wir was diese alles gebracht hat und wie die Daten in der Datenbank aussieht. Danach machen wir das selbe mit der Erweiterung.
+
+
+Zum Anfang haben wir eine uns mit Python eine Postgres Datenbank aufgebaut. Dies haben wir erst mit der Planung und dann mit der Ausführung bewältigt. Zu nächst haben wir uns die Daten angeguckt. Dann haben wir daraus ein ER-Modell erstellt und dies in ein relationales Schema gebracht. Dieses Schema haben wir dann verschmolzen um die letzte theoretische Übersicht der Datenbank aufzuzeigen. Darauf hin haben wir uns Anomalien angeguckt und Normalformen erklärt um diese zu verhindern. Danach haben wir uns die eigentliche Erstellung der Datenbank angeguckt und wie man mit SQL eine Tabelle einfügt. Nun haben wir die Daten nur noch eingefügt und abgespeichert.
+
+Dieses Einfügen klappt mit einer Geschwindigkeit von 40-60 Transaktionen die Sekunde, dass heißt nur für grob 5 Millionen Publikationen würden wir 100.000 Sekunden brauchen das sind 1667 Minuten oder auch ca. 28 Stunden. Davon abgesehen das noch 2 Millionen Autoren da zu kommen. Dazu kommt noch das Transaktionen nicht nicht Publikationen pro Sekunde sind, denn in Publikationen sind alleine zwischen 2-4 Autoren beteiligt die jedes mal Abgefragt werden müssen ob sie Existieren und wenn nicht angelegt werden. Hier müssen natürlich auch die Relationen angelegt werden die die beiden Tabellen verbindet. Daraus werden dann pro Publikation dann mindestens 6 Transaktionen mehr. Dazu kommen noch die ein bis zwei elektronischen Versionen pro Publikation mit den Relationen. Somit landen wir grob bei einer Dauer von 308 Stunden das sind fasst 13 Tage. Da durch viele erneute Anpassungen der Datenbank dieser Prozess wiederholt werden musste, werden hier nur Ausschnitte der bisherigen Ergebnisse gezeigt.
+
+
+Um die Daten auszulesen wird Data Querie Language(DQL) verwendet, eine Datenabfragesprache die wieder ein Teil von SQL da stellt. Hiermit können Anfragen an die Datenbank gestellt werden die uns dann dem entsprechende Antworten liefert. Mit diesem Teil von SQL kann in der Datenbank nichts geändert werden weder Struktur noch Daten.
 
 \begin{figure}[!htb]
-	\centering
-	%\includegraphics[width=14cm,keepaspectratio]{ER-Modell}
+	\oranget{SELECT} Name , \oranget{COUNT}(Key) \oranget{AS} Anzahl \oranget{FROM} AUTOR\newline
+	\oranget{GROUP BY} Name\newline
+	\oranget{ORDER BY COUNT}(Key) \oranget{DESC} \newline
+	\oranget{LIMIT} 3;\newline
 	\caption{DQL Beispiel}
 	\label{fig:dqlbeispiel}
 \end{figure}
 
-Erklärung...%todo
+Da viele Autoren in der Datenbank sind, gibt es einige Leute die den selben Namen haben. Mit diesem DQL Befehl werden die Top 3 Namen ausgegeben die sich am öftesten wiederholen. Dafür wird der Select-Befehl benutzt. Dazu wird erst angegeben welche Attribute ausgegeben werden soll und dann aus welcher Tabelle diese Ausgabe kommen soll. In unserem Fall ist es der Name und die gezählten Autoren aus der Tabelle Autor. Der Befehl AS ändert nur den Spalten Namen von COUNT(Key) auf Anzahl. Mit GROUP BY gruppieren wir die Zeilen an Hand des Namens. Nun sortieren wir die Tabelle nach der Anzahl mit ORDER BY. Das DESC steht für descending also für eine absteigende Reihenfolge, damit wir das höchste Ergebnis als erstes bekommen. Durch das LIMIT 3 werden nur die ersten 3 Einträge ausgegeben. Das Ergebnis erhalten wir darauf hin in Tabellenform. Jede Zeile ist ein eigener Eintrag und enthält einen Datensatz.
 
 \begin{figure}[!htb]
 	\centering
-	%\includegraphics[width=14cm,keepaspectratio]{ER-Modell}
+	\includegraphics[width=5cm,keepaspectratio]{bilder/dqlbeispiel}
 	\caption{DQL Ergebnis}
 	\label{fig:dqlergebnis}
 \end{figure}
+
+Aus diesem Beispiel kann man entnehmen das der häufigste Name der Autoren Wie Wang ist. Hier bei ist zu beachten das zu der Zeit der Ausgabe 84,640 Autoren in der Datenbank waren. Davon hießen Maximal 19 Leute Gleich. Diese Zahl kann noch variieren da 2,6 Millionen Autoren insgesamt in der DBLP sind.
+
+Nun folgen die Resultate der Erweiterung. Wo erst die API besprochen wurde und dann ein typischer Durchlauf um ein Zitate Einzufügen.
+
+In der Arbeit wird gesagt das die Transaktion mit der API auf 10.000 beschränkt ist, dennoch benutzen wir nur 200 Titel gleichzeitig zum Testen. Dies liegt daran das pro angefragten Titel alle gefunden Zitate nochmal angefragt werden müssen. Da es keine Begrenzung gibt wie viele Zitate vorhanden sein können, kann die Anzahl an Anfragen, die für die Zitate gebraucht werden, nicht eingeschätzt werden. Deshalb werden nur 200 Titel genutzt.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=13cm,keepaspectratio]{bilder/dqlzitatbeispiel}
+	\caption{Zitat Ausschnitt}
+	\label{fig:dqlzitatbeispiel}
+\end{figure}
+
+In der Abbildung \ref{fig:dqlzitatbeispiel} sieht man die Relation Publikation-hat-Zitat. Der erste Wert repräsentiert die Publikations Id von der Arbeit die das Zitat verwendet. Der Zweite stellt die Id von dem Werk da das zitiert wurde. Die letzte Spalte zeigt das Zitat an sich. Dieses wurde gekürzt, da dies sonst zu viel platz ein nehmen würde. Dieser Ausschnitt wurde direkt aus der Datenbank geholt und beweist das Zitate eingefügt werden
+
+
+
+
+
+
+
