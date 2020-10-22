@@ -1,7 +1,9 @@
 import http.client, urllib.request, urllib.parse, urllib.error, base64, json
 
 
-
+# Hier wird ein Zitat von dem Microsoft Academic Graph gesucht
+# mittels des titels der schon auf kleinschreibung und Sonderzeichen angepasst wurde
+# Die Rückgabe ist entweder die json Antwort oder none
 def sucheZitate(titel):
     headers = {
         # Request headers
@@ -36,8 +38,10 @@ def sucheZitate(titel):
 
 
 
-
-def sucheTitel(titelid):
+# Hier wird ein Titel von dem Microsoft Academic Graph gesucht
+# mittels der paperid,also der id aus dem MAG
+# Die Rückgabe ist entweder die json Antwort oder none
+def sucheTitel(paperid):
     headers = {
         # Request headers
         'Ocp-Apim-Subscription-Key': 'd887095bc04a4a04b446fdb9445bff8e',

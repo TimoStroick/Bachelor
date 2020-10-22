@@ -2,6 +2,7 @@ import psycopg2
 import Daten.MAG as mag
 punc = '''!()-[]{};:'"\,<>./?@#$%^&*_~üöä1234567890'''
 
+
 def zitateAusgeben():
     con = psycopg2.connect(database="postgres", user="postgres", password="admin", host="127.0.0.1", port="5432")
     cur = con.cursor()

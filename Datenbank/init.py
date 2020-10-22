@@ -125,7 +125,7 @@ def initialisieren():
     cur.execute('''CREATE TABLE Publikation_hat_Zitat
           (HatZitatID INTEGER      NOT NULL,
           IstZitiertID INTEGER      NOT NULL,
-          Zitat VARCHAR(400) NOT NULL,
+          Zitat TEXT NOT NULL,
           PRIMARY KEY(HatZitatID,IstZitiertID),
           FOREIGN KEY(HatZitatID) REFERENCES PUBLIKATION(ID)
           ON DELETE CASCADE ON UPDATE CASCADE,

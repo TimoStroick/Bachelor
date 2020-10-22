@@ -1,12 +1,12 @@
 import Datenbank.Einfügen as inst
-
+# In dieser Klasse werden alle DBLP Entitäten in die Datenbankentitäten geparst
+# und an die jeweiligen insert-Methoden gegeben
 
 def saveProceedings(editors, ees, titel, series, auflage, jahr, url, buchtitel, isbn, herausgeber):
     konferenzid = inst.insertKonferenz(titel, buchtitel, jahr, auflage, series, herausgeber)
     inst.insertISBN(isbn)
     inst.insertKonferenz_hat_ISBN(isbn, konferenzid)
     for editor in editors:
-        editor = editor.strip()
         inst.insertAutor(editor)
         inst.insertAutor_bearbeitet_Konferenz(editor, konferenzid)
     for ee in ees:
@@ -15,12 +15,11 @@ def saveProceedings(editors, ees, titel, series, auflage, jahr, url, buchtitel, 
     print("Saved")
 
 
-def saveInproceedings(authors, ees, titel, seiten, auflage, jahr, url, crossref, buchtitel, serie, herausgeber):
+def saveInproceedings(autors, ees, titel, seiten, auflage, jahr, url, crossref, buchtitel, serie, herausgeber):
     publikationid = inst.insertPublikation(titel, jahr, "")
-    for author in authors:
-        author = author.strip()
-        inst.insertAutor(author)
-        inst.insertAutor_schreibt_Publikation(author, publikationid)
+    for autor in autors:
+        inst.insertAutor(autor)
+        inst.insertAutor_schreibt_Publikation(autor, publikationid)
     for ee in ees:
         inst.insertElektronischeVersion(ee)
         inst.insertPublikation_hat_ElektronischeVersion(ee, publikationid)
@@ -29,12 +28,11 @@ def saveInproceedings(authors, ees, titel, seiten, auflage, jahr, url, crossref,
     print("Inproceeding Saved")
 
 
-def saveIncollection(authors, titel, ees, seiten, jahr, buchtitel, crossref, url):
+def saveIncollection(autors, titel, ees, seiten, jahr, buchtitel, crossref, url):
     publikationid = inst.insertPublikation(titel, jahr, "")
-    for author in authors:
-        author = author.strip()
-        inst.insertAutor(author)
-        inst.insertAutor_schreibt_Publikation(author, publikationid)
+    for autor in autors:
+        inst.insertAutor(autor)
+        inst.insertAutor_schreibt_Publikation(autor, publikationid)
     for ee in ees:
         inst.insertElektronischeVersion(ee)
         inst.insertPublikation_hat_ElektronischeVersion(ee, publikationid)
@@ -43,12 +41,11 @@ def saveIncollection(authors, titel, ees, seiten, jahr, buchtitel, crossref, url
     print("Incollection Saved")
 
 
-def saveArticle(titel, jahr, authors, ees, fachzeitschrift, auflage, seiten, cite, herausgeber):
+def saveArticle(titel, jahr, autors, ees, fachzeitschrift, auflage, seiten, cite, herausgeber):
     publikationid = inst.insertPublikation(titel, jahr, "")
-    for author in authors:
-        author = author.strip()
-        inst.insertAutor(author)
-        inst.insertAutor_schreibt_Publikation(author, publikationid)
+    for autor in autors:
+        inst.insertAutor(autor)
+        inst.insertAutor_schreibt_Publikation(autor, publikationid)
     for ee in ees:
         inst.insertElektronischeVersion(ee)
         inst.insertPublikation_hat_ElektronischeVersion(ee, publikationid)
@@ -57,12 +54,11 @@ def saveArticle(titel, jahr, authors, ees, fachzeitschrift, auflage, seiten, cit
     print("Article Saved")
 
 
-def saveBook(authors, ees, titel, jahr, isbn, herausgeber, series, auflage):
+def saveBook(autors, ees, titel, jahr, isbn, herausgeber, series, auflage):
     buchid = inst.insertBuch(titel, jahr, herausgeber, auflage, series)
-    for author in authors:
-        author = author.strip()
-        inst.insertAutor(author)
-        inst.insertAutor_schreibt_Buch(author, buchid)
+    for autor in autors:
+        inst.insertAutor(autor)
+        inst.insertAutor_schreibt_Buch(autor, buchid)
     for ee in ees:
         inst.insertElektronischeVersion(ee)
         inst.insertBuch_hat_ElektronischeVersion(ee, buchid)
@@ -72,34 +68,31 @@ def saveBook(authors, ees, titel, jahr, isbn, herausgeber, series, auflage):
     print("Buch Saved")
 
 
-def saveHomepage(titel, authors, note, url):
+def saveHomepage(titel, autors, note, url):
     inst.insertHomepage(titel, note, url)
-    for author in authors:
-        author = author.strip()
-        inst.insertAutor(author)
-        inst.insertAuthor_hat_Homepage(author, url)
+    for autor in autors:
+        inst.insertAutor(autor)
+        inst.insertAuthor_hat_Homepage(autor, url)
     print("Homepage Saved")
 
 
-def saveMasterthesis(titel, authors, jahr, universitaet, ees, note):
+def saveMasterthesis(titel, autors, jahr, universitaet, ees, note):
     publikationid = inst.insertPublikation(titel, jahr, universitaet)
-    for author in authors:
-        author = author.strip()
-        inst.insertAutor(author)
-        inst.insertAutor_schreibt_Publikation(author, publikationid)
+    for autor in autors:
+        inst.insertAutor(autor)
+        inst.insertAutor_schreibt_Publikation(autor, publikationid)
     for ee in ees:
         inst.insertElektronischeVersion(ee)
         inst.insertPublikation_hat_ElektronischeVersion(ee, publikationid)
     print("Saved")
 
 
-def savePhdthesis(titel, authors, jahr, seiten, herausgeber, series, auflage, universitaet, isbn, ees):
+def savePhdthesis(titel, autors, jahr, seiten, herausgeber, series, auflage, universitaet, isbn, ees):
     publikationid = inst.insertPublikation(titel, jahr, universitaet)
     buchid = inst.insertBuch(titel, jahr, herausgeber, auflage, series)
-    for author in authors:
-        author = author.strip()
-        inst.insertAutor(author)
-        inst.insertAutor_schreibt_Publikation(author, publikationid)
+    for autor in autors:
+        inst.insertAutor(autor)
+        inst.insertAutor_schreibt_Publikation(autor, publikationid)
     for ee in ees:
         inst.insertElektronischeVersion(ee)
         inst.insertPublikation_hat_ElektronischeVersion(ee, publikationid)
