@@ -15,7 +15,6 @@ def sucheZitate(titel):
         'model': 'latest',
         'count': '10',
         'offset': '0',
-        #'orderby': '{string}',
         'attributes': 'CitCon',
     })
 
@@ -52,12 +51,11 @@ def sucheTitel(paperid):
         'model': 'latest',
         'count': '10',
         'offset': '0',
-        #'orderby': '{string}',
         'attributes': 'DN',
     })
 
-    titel = urllib.parse.quote(titelid)
-    expr = "Id=" + titelid + ""
+    titel = urllib.parse.quote(paperid)
+    expr = "Id=" + paperid + ""
     query = "/academic/v1.0/evaluate?expr={expr}&%s" % params
     query = query.format(expr=expr)
 
